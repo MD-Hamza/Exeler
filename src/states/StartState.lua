@@ -8,6 +8,12 @@ function StartState:init()
     })
 end
 
+function StartState:update(dt)
+    if wasPressed("enter") or wasPressed("return") then
+        gStateMachine:change("play")
+    end
+end
+
 function StartState:render()
     love.graphics.draw(gTextures["background"], 0, 0, 0,
         VIRTUAL_WIDTH/gTextures["background"]:getWidth(),
