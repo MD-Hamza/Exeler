@@ -4,14 +4,18 @@ function Room:init(def)
     self.tiles = {}
     self.mapHeight = def.mapHeight
     self.mapWidth = def.mapWidth
-    self.player = def.player
+
     --Coordinates of the top left tile
     self.startX = -(self.mapWidth * 4)
     self.startY = -(self.mapHeight * 4)
     self:generatefloor(16, 16)
 
+    self.map = GameLevel(self.tiles, self.mapWidth, self.mapHeight, self.startX, self.startY)
+
     self.entities = {}
     self:generateEntities()
+
+    self.gameObjects = {}
 end
 
 function Room:generatefloor(width, height)
@@ -57,33 +61,51 @@ function Room:generatefloor(width, height)
 end
 
 function Room:generateEntities()
-    local skeleton = Entity{
-        x = math.random(VIRTUAL_WIDTH / 2 - 42, VIRTUAL_WIDTH / 2 + 42),
-        y = math.random(VIRTUAL_HEIGHT/ 2 - 48, VIRTUAL_HEIGHT/ 2 + 48),
-        width = 32,
-        height = 48,
-        texture = "skeleton",
-        animations = ENTITY_DEFS["skeleton"].animations
-    }
+    for i = 1, 7 do
+        local skeleton = Entity{
+            x = math.random(VIRTUAL_WIDTH / 2 - 142, VIRTUAL_WIDTH / 2 + 142),
+            y = math.random(VIRTUAL_HEIGHT/ 2 - 148, VIRTUAL_HEIGHT/ 2 + 148),
+            width = 32,
+            height = 48,
+            texture = "skeleton",
+            animations = ENTITY_DEFS["skeleton"].animations,
+            walkSpeed = ENTITY_DEFS["skeleton"].walkSpeed,
+            map = self.map
+        }
 
-    skeleton.StateMachine = StateMachine{
-        ["idle"] = function() return EntityIdleState(skeleton) end
-    }
-    skeleton.StateMachine:change("idle")
+        skeleton.StateMachine = StateMachine{
+            ["idle"] = function() return EntityIdleState(skeleton) end,
+            ["walk"] = function() return EntityWalkState(skeleton) end
+        }
+        skeleton.StateMachine:change("idle")
 
-    table.insert(self.entities, skeleton)
+        table.insert(self.entities, skeleton)
+    end
 end
 
 function Room:update(dt)
     for y = 1, self.mapHeight do
         for x = 1, self.mapWidth do
-
             self.tiles[y][x]:update(dt)
         end
     end
 
     for k, entity in pairs(self.entities) do
         entity:update(dt)
+        entity:processAI(dt)
+        if entity:collides(Box(self.player.x + 5, self.player.y + 10, self.player.width - 10, self.player.height - 20)) and not self.player.invulnerable then
+            self.player:damage(1)
+            self.player:goInvulnerable(1)
+        end
+    end
+
+    for k, object in pairs(self.gameObjects) do
+        object:update(dt)
+        for k, entity in pairs(self.entities) do
+            if object:collides(entity) and object.deadly then
+                table.remove(self.entities, k)
+            end
+        end
     end
 end
 
@@ -97,4 +119,9 @@ function Room:render()
     for k, entity in pairs(self.entities) do
         entity:render()
     end
+
+    for k, object in pairs(self.gameObjects) do
+        object:render()
+    end
+    
 end

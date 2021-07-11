@@ -14,12 +14,13 @@ function PlayerIdleState:update(dt)
         self.player:changeState("sword")
     end
 
+    if wasPressed("b") then
+        self.player:changeState("bow")
+    end
     --self.player.hitBox = HitBox(self.player.x, self.player.y + self.player.height/2, self.player.width, self.player.height)
 end
 
 function PlayerIdleState:render()
-    local animation = self.entity.currentAnimation
-    if animation then
-        drawAnimation(animation, self.entity.x, self.entity.y)
-    end
+    local animation = self.player.currentAnimation
+    drawAnimation(animation, math.floor(self.player.x), math.floor(self.player.y))
 end

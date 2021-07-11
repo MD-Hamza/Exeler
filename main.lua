@@ -32,14 +32,15 @@ COLLIDABLE = {
     BOTTOMSIDE,
     RIGHTSIDE
 }
-width = 44
-height = 49
-startX = 3
-startY = 14
-jumpX = 22
+width = 64
+height = 55
+startX = 0
+startY = 10
 jumpY = 15
+jumpX = 0
 function love.load()
     math.randomseed(os.time())
+    love.graphics.setDefaultFilter('nearest', 'nearest')
     love.window.setTitle('Exeler')
 
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
@@ -65,8 +66,8 @@ function love.keypressed(key)
     if key == "escape" then
         love.event.quit()
     end
-    --[[
-    if key == "q" then
+    
+    --[[if key == "q" then
         width = width + 1
     elseif key == "w" then
         width = width - 1
@@ -82,10 +83,18 @@ function love.keypressed(key)
         jumpX = jumpX + 1
     elseif key == "s" then
         jumpX = jumpX - 1
+    elseif key == "d" then
+        jumpY = jumpY + 1
+    elseif key == "f" then
+        jumpY = jumpY - 1
+    elseif key == "g" then
+        height = height + 1
+    elseif key == "h" then
+        height = height - 1
     else
-        print(width, startX, jumpX, startY)
-    end
-    ]]
+        print(width, startX, jumpX, jumpY, startY, height)
+    end]]
+    
     love.keyboard.keysPressed[key] = true
 end
 

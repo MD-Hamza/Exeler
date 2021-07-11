@@ -27,6 +27,10 @@ function GameObject:update(dt)
     self.animation:update(dt)
 end
 
+function GameObject:changeAnimation(name)
+    self.currentAnimation = self.animations[name]
+end
+
 function GameObject:collides(target)
 	return not (self.x > target.x + target.width or self.x + self.width < target.x or
 		self.y > target.y + target.height or self.y + self.height < target.y)
