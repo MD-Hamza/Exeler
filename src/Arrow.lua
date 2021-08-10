@@ -30,25 +30,26 @@ function Arrow:init(def)
         self.offsetX = -25
         self.offsetY = 57
 
-    else
+    elseif self.direction == "right" then
         self.dy = 0
         self.dx = 290
         self.rotation = math.rad(180)
         
         self.offsetY = 60
         self.offsetX = 25
+    else
+        self.dy = -290 * math.sin(self.direction)
+        self.dx = 290 * math.cos(self.direction)
+        self.rotation = self.direction + (math.pi - 2 * self.direction)
+
+        self.offsetY = -45 * math.sin(self.direction - 1.1) + 20 - math.abs(5 * math.cos(self.direction))
+        self.offsetX = 44 * math.sin(self.direction + 0.28) + 12.5
     end
 end
 
 function Arrow:update(dt)
-    if self.direction == "up" or self.direction == "down" then
-        self.dy = self.dy > 0 and self.dy + 5 or self.dy - 5
-    else
-        self.dx = self.dx > 0 and self.dx + 5 or self.dx - 5
-    end
-
-    self.x = math.floor(self.x + self.dx * dt)
-    self.y = math.floor(self.y + self.dy * dt)
+    self.x = self.x + self.dx * dt
+    self.y = self.y + self.dy * dt
     self.hitBox = Box(self.x + 12, self.direction == "down" and self.y + 44 or self.y + 14, self.width, self.height)
 end
 

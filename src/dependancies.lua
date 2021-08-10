@@ -4,18 +4,23 @@ Timer = require "lib/knife/timer"
 
 require "src/Util"
 require "src/Animation"
+require "src/TileMap"
 require "src/Tile"
 require "src/Box"
 require "src/Arrow"
 require "src/GameLevel"
+require "src/map_def"
 require "src/World/Room"
 require "src/Entity_def"
+require "src/GameObject_def"
 require "src/StateMachine"
 require "src/states/BaseState"
 require "src/states/StartState"
 require "src/states/PlayState"
 
 require "src/Entity"
+require "src/GameObject"
+require "src/NPC"
 require "src/Player"
 require "src/states/EntityIdleState"
 require "src/states/EntityWalkState"
@@ -23,6 +28,8 @@ require "src/states/player/PlayerIdleState"
 require "src/states/player/PlayerWalkState"
 require "src/states/player/PlayerSwordState"
 require "src/states/player/PlayerBowState"
+require "src/states/player/DisplayTextState"
+require "src/states/player/SkeletonShootingRange"
 
 gTextures = {
     ["background"] = love.graphics.newImage("graphics/background.png"),
@@ -53,33 +60,18 @@ gTextures = {
     ["skeleton"] = love.graphics.newImage("graphics/player/walkcycle/BODY_skeleton.png"),
     ["overworld"] = love.graphics.newImage("graphics/Overworld.png"),
     ["dummy"] = love.graphics.newImage("graphics/player/combat_dummy/BODY_animation.png"),
-    ["objects"] = love.graphics.newImage("graphics/objects.png")
+    ["objects"] = love.graphics.newImage("graphics/objects.png"),
+    ["font"] = love.graphics.newImage("graphics/font.png")
 }
-
-terrain = tileQuads(16, 16, gTextures["overworld"])
-hearts = tileQuads(14, 13, gTextures["objects"], 64, 2, 2)
 
 gFrames = {
     ["walk"] = {},
     ["slash"] = {},
     ["bow"] = {},
     ["skeleton"] = tileQuads(32, 48, gTextures["skeleton"], 17, 15, 32, 16),
-    ["terrain"] = table.slice(terrain, {
-        {1, 6}, --6
-        {41, 44}, --4
-        {121, 126}, --6
-        {161, 166}, --6
-        {201, 206}, --6
-        {243, 245}, --3
-        {283, 285}, --3
-        {323, 325}, --3
-        {363, 364}, --2
-        {403, 404}, --2
-    }),
+    ["overworld"] = tileQuads(16, 16, gTextures["overworld"]),
     ["dummy"] = tileQuads(32, 48, gTextures["dummy"], 17, 15, 32, 16),
-    ["hearts"] = table.slice(hearts, {
-        {1, 5}
-    })
+    ["objects"] = tileQuads(16, 16, gTextures["objects"])
 }
 
 order = {"character", "robe", "belt", "torso", "head"}
@@ -88,6 +80,7 @@ for k, type in pairs(order) do
     gFrames["slash"][type] = tileQuads(64, 49, gTextures["slash"][type], 0, 14, 0, 15)
     gFrames["bow"][type] = tileQuads(64, 63, gTextures["bow"][type], 0, 4, 0, 0)
 end
+
 gFrames["slash"]["dagger"] = tileQuads(64, 49, gTextures["slash"]["dagger"], 0, 14, 0, 15)
 gFrames["bow"]["bow"] = tileQuads(64, 63, gTextures["bow"]["bow"], 0, 4, 0, 0)
 gFrames["bow"]["arrow"] = tileQuads(64, 63, gTextures["bow"]["arrow"], 0, 4, 0, 0)
@@ -95,5 +88,6 @@ gFrames["bow"]["arrow"] = tileQuads(64, 63, gTextures["bow"]["arrow"], 0, 4, 0, 
 gFonts = {
     ["basic"] = love.graphics.newFont("fonts/font.ttf", 24),
     ["Exeler"] = love.graphics.newFont("fonts/Exeler.ttf", 42),
-    ["Exeler-small"] = love.graphics.newFont("fonts/Exeler.ttf", 24)
+    ["Exeler-small"] = love.graphics.newFont("fonts/Exeler.ttf", 24),
+    ["Exeler-xsmall"] = love.graphics.newFont("fonts/Exeler.ttf", 20)
 }

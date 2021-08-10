@@ -11,12 +11,12 @@ function Tile:init(def)
 
 	self.id = def.id
 	self.type = def.type
-
-    self.animation = Animation{["frames"] = self.id, ["interval"] = def.interval}
+	
+    --self.animation = Animation{["frames"] = self.id, ["interval"] = def.interval}
 end
 
 function Tile:update(dt)
-    self.animation:update(dt)
+    --self.animation:update(dt)
 end
 
 function Tile:collidable()
@@ -29,6 +29,9 @@ function Tile:collidable()
 end
 
 function Tile:render()
-	love.graphics.draw(gTextures["overworld"], gFrames[self.type][self.animation:getCurrentFrame()], 
-		self.x, self.y)
+	if not (self.id == 0) then
+		love.graphics.draw(gTextures["overworld"], gFrames[self.type][self.id], 
+			self.x, self.y)
+
+	end
 end

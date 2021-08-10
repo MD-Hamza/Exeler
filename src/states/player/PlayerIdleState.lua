@@ -17,6 +17,21 @@ function PlayerIdleState:update(dt)
     if wasPressed("b") then
         self.player:changeState("bow")
     end
+
+    if (wasPressed("return")) then
+        self.player.y = self.player.y - 1
+        for k, object in pairs(self.entity.room.gameObjects) do
+            if self.player:collides(object) then
+                self.player.x = object.x - 8
+                self.player:changeState("text", {
+                    text = "This is skeleton shooting range, defeat the skeletons within sixty seconds to recieve a piece of Exeler. These skeletons are trained to dodge arrows and you can shoot arrows every one second. Good Luck.", 
+                    enterCounter = 1,
+                    nextState = "skeletonShooting"
+                })
+            end
+        end
+        self.player.y = self.player.y + 1
+    end
     --self.player.hitBox = HitBox(self.player.x, self.player.y + self.player.height/2, self.player.width, self.player.height)
 end
 

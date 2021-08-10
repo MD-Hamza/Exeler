@@ -8,36 +8,42 @@ WINDOW_HEIGHT = 720
 
 PLAYER_WALKING_SPEED = 120
 
-GROUND = {1}
-WATER = {7, 8, 9, 10}
-
-TOPSIDE = {36}
-LEFTSIDE = {34}
-BOTTOMSIDE = {30}
-RIGHTSIDE = {32}
-
-TOPLEFTGROUND = {38}
-TOPRIGHTGROUND = {39}
-BOTTOMLEFTGROUND = {40}
-BOTTOMRIGHTGROUND = {41}
-
 COLLIDABLE = {
-    WATER,
-    TOPRIGHTGROUND,
-    TOPLEFTGROUND,
-    BOTTOMLEFTGROUND,
-    BOTTOMRIGHTGROUND,
-    TOPSIDE,
-    LEFTSIDE,
-    BOTTOMSIDE,
-    RIGHTSIDE
+    643, 728, 645, 647, 765, 766, 687, 726, 686, 727, 764, 565, 
+    566, 567, 525, 526, 527, 485, 486, 487, 192, 193, 153, 152, 
+    601, 564, 523, 562, 522, 603, 604, 524, 602, 641, 561, 642, 
+    644, 646, 685, 723, 725, 681, 721, 683, 205, 204, 206, 491, 
+    490, 450, 451, 168, 167, 127, 128, 87, 88, 89, 49, 48, 47, 
+    8, 9, 7, 10, 50, 90, 130, 170, 129, 171, 131, 91, 51, 11, 
+    208, 445, 405, 446, 447, 407, 361, 362, 442, 443, 441, 
+    367, 285, 324, 325, 323, 283, 41, 82, 81, 42, 44, 43, 83, 
+    339, 379, 341, 299, 260, 810, 770, 730, 690, 691, 731, 771, 
+    811
 }
+
+COLLIDABLE_TOP = {
+    442
+}
+
+COLLIDABLE_RIGHT = {
+    367, 407
+}
+
+COLLIDABLE_LEFT = {
+    365, 405
+}
+
+COLLIDABLE_BOTTOM = {
+    446
+}
+
 width = 64
 height = 55
 startX = 0
 startY = 10
 jumpY = 15
 jumpX = 0
+
 function love.load()
     math.randomseed(os.time())
     love.graphics.setDefaultFilter('nearest', 'nearest')

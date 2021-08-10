@@ -1,13 +1,11 @@
 PlayState = Class{__includes = BaseState}
 
 function PlayState:init()
-    self.room = Room{
-        mapHeight = 58, 
-        mapWidth = 72}
+    self.room = Room()
 
     self.player = Player{
-        x = (VIRTUAL_WIDTH / 2 - 16),
-        y = (VIRTUAL_HEIGHT / 2 - 24),
+        x = 1100,
+        y = 700,
         width = 32,
         height = 48,
         texture = "character",
@@ -19,11 +17,14 @@ function PlayState:init()
     }
 
     self.room.player = self.player
+    self.room:generateNPC()
     self.player.StateMachine = StateMachine{
         ["idle"] = function() return PlayerIdleState(self.player) end,
         ["walk"] = function() return PlayerWalkState(self.player) end,
         ["sword"] = function() return PlayerSwordState(self.player) end,
-        ["bow"] = function() return PlayerBowState(self.player) end
+        ["bow"] = function() return PlayerBowState(self.player) end,
+        ["text"] = function() return DisplayTextState(self.player) end,
+        ["skeletonShooting"] = function() return SkeletonShootingRange(self.player) end,
     }
     self.player.StateMachine:change("idle")
 
@@ -32,9 +33,12 @@ function PlayState:init()
 end
 
 function PlayState:update(dt)
-    self.room:update(dt)
     self.player:update(dt)
-    self:updateCamera()
+    self.room:update(dt)
+    self:updateCamera(dt)
+    if wasPressed("b") then
+        print(self.player.x, self.player.y)
+    end
 end
 
 function PlayState:render()
@@ -49,14 +53,14 @@ function PlayState:render()
 
     for i = 1, 3 do
         if healthLeft > 1 then
-            heartFrame = 1
-        elseif healthLeft == 1 then
-            heartFrame = 3
-        else
             heartFrame = 5
+        elseif healthLeft == 1 then
+            heartFrame = 7
+        else
+            heartFrame = 9
         end
 
-        love.graphics.draw(gTextures['objects'], gFrames['hearts'][heartFrame],
+        love.graphics.draw(gTextures['objects'], gFrames['objects'][heartFrame],
             (i - 1) * (16) + 5, 5)
         
         healthLeft = healthLeft - 2
@@ -64,7 +68,7 @@ function PlayState:render()
     
 end
 
-function PlayState:updateCamera()
+function PlayState:updateCamera(dt)
     self.camX = (VIRTUAL_WIDTH / 2 - 16) - self.player.x 
     self.camY = (VIRTUAL_HEIGHT / 2 - 24) - self.player.y
 end

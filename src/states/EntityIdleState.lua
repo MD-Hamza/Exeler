@@ -6,6 +6,9 @@ function EntityIdleState:init(entity)
 
     self.timer = 0
     self.duration = math.random(3)
+
+    --Used by the NPC class to identify the current state
+    self.state = "idle"
 end
 
 function EntityIdleState:processAI(dt)

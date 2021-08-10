@@ -13,8 +13,7 @@ function GameObject:init(def, x, y)
 	self.height = def.height
 
 	self.texture = def.texture
-	self.animation = def.animation
-
+	self.frame = def.frame
 	self.solid = def.solid
 	self.consumable = def.consumable
 	self.collidable = def.collidable
@@ -24,11 +23,7 @@ function GameObject:init(def, x, y)
 end
 
 function GameObject:update(dt)
-    self.animation:update(dt)
-end
 
-function GameObject:changeAnimation(name)
-    self.currentAnimation = self.animations[name]
 end
 
 function GameObject:collides(target)
@@ -37,6 +32,6 @@ function GameObject:collides(target)
 end
 
 function GameObject:render()
-	love.graphics.draw(gTextures[self.texture], gFrames[self.texture][self.animation:getCurrentFrame()], 
+	love.graphics.draw(gTextures[self.texture], gFrames[self.texture][self.frame], 
 		self.x, self.y)
 end

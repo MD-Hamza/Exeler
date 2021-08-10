@@ -37,7 +37,27 @@ end
 
 function Entity:collides(target)
     local selfY, selfHeight = self.y + self.height / 2, self.height - self.height / 2
-    
+    --If theres a certain side of the target the entity can collide with then it checks a hitbox on that side
+    if (target.collsionSide) then
+
+        if target.collsionSide == "left" then
+           targetX, targetY, targetWidth, targetHeight = target.x, target.y, 0, target.height
+        elseif target.collsionSide == "right" then
+            targetX, targetY, targetWidth, targetHeight = target.x + target.width, target.y, 0, target.height
+        elseif target.collsionSide == "up" then
+            targetX, targetY, targetWidth, targetHeight = target.x + target.width, target.y, target.width, 0
+        else
+            targetX, targetY, targetWidth, targetHeight = target.x, target.y + target.height, target.width, 0
+        end
+
+        if self.x + self.width < targetX or self.x > targetX + targetWidth or
+            selfY + selfHeight < targetY or selfY > targetY + targetHeight then
+            return false
+        end
+
+        return true
+    end
+
     if self.x + self.width < target.x or self.x > target.x + target.width or
         selfY + selfHeight < target.y or selfY > target.y + target.height then
             return false
@@ -46,8 +66,8 @@ function Entity:collides(target)
     return true
 end
 
-function Entity:changeState(name)
-    self.StateMachine:change(name)
+function Entity:changeState(name, params)
+    self.StateMachine:change(name, params)
 end
 
 function Entity:changeAnimation(name)
@@ -59,7 +79,7 @@ function Entity:update(dt)
         self.currentAnimation:update(dt)    
     end
 
-    if self.invulnerable then
+    if self.invulnerable and self.invulnerableDuration then
 		self.invulnerableTimer = self.invulnerableTimer + dt
 		self.flashTimer = self.flashTimer + dt
 

@@ -1,18 +1,43 @@
 GameLevel = Class{}
 
-function GameLevel:init(tiles, width, height, startX, startY)
-    self.tiles = tiles
-    self.mapWidth = width
-    self.mapHeight = height
-    self.startX = startX
-    self.startY = startY
+function GameLevel:init(map, entities, objects)
+    self.map = map
+    self.entities = entities
+    self.objects = objects
 end
 
-function GameLevel:pointToTile(x, y)
-    --[[
-	if (x < 0 or y < 0 or x > self.mapWidth * 16 or y > self.mapHeight * 16) then
-		return nil
-	end]]
+function GameLevel:clear()
+	for i = 1, #self.entities do
+		if not self.entities[i] then
+			table.remove(self.entities, i)
+		end
+	end	
 
-	return self.tiles[math.floor((y - self.startY) / 16)][math.floor((x - self.startX) / 16)]
+	for i = 1, #self.objects do
+		if not self.objects[i] then
+			table.remove(self.objects, i)
+		end
+	end
+end
+
+function GameLevel:update(dt)
+	for k, entity in pairs(self.entities) do
+		entity:update(dt)
+	end	
+
+	for k, object in pairs(self.objects) do
+		object:update(dt)
+	end
+end
+
+function GameLevel:render()
+	self.map:render()
+
+	for k, entity in pairs(self.entities) do
+		entity:render()
+	end
+
+	for k, object in pairs(self.objects) do
+		object:render()
+	end
 end
