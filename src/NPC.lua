@@ -1,14 +1,20 @@
 NPC = Class{__includes = Entity}
 
-function NPC:init(def, player, text, enterCounter)
+function NPC:init(def, player, text, enterCounter, quest, outfit)
 	Entity.init(self, def)
     self.player = player
     self.text = text
     self.enterCounter = enterCounter
     self.talking = false
+    self.quest = quest
+    self.outfit = outfit
 end
 
 function NPC:update(dt)
+    if self.currentAnimation then
+        self.currentAnimation:update(dt)    
+    end
+    
     if wasPressed("return") and self:collides(self.player) and not self.talking then
         self.talking = true
         self.player:changeState("text", {
@@ -36,5 +42,8 @@ function NPC:update(dt)
 end
 
 function NPC:render()
-	Entity.render(self)
+	local animation = self.currentAnimation
+	if animation then
+		drawAnimation(animation, self.x, self.y, self.outfit)
+	end
 end

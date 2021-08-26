@@ -1,6 +1,6 @@
 EntityWalkState = Class{__includes = BaseState}
 
-function EntityWalkState:init(entity)
+function EntityWalkState:init(entity, directions)
 	self.entity = entity
 	self.entity:changeAnimation('walk-'..self.entity.direction)
 
@@ -8,6 +8,9 @@ function EntityWalkState:init(entity)
 	self.timer = 0
 
 	self.bumped = false
+
+	--The directions the skeleton is allowed to move in
+	self.directions = directions or {"left", "right", "up", "down"}
 end
 
 function EntityWalkState:update(dt)
@@ -70,10 +73,9 @@ function EntityWalkState:update(dt)
 end
 
 function EntityWalkState:processAI(dt)
-	local directions = {"left", "right"}
 	if self.bumped or self.moveDuration == 0 then
 		self.moveDuration = math.random(5)
-		self.entity.direction = directions[math.random(#directions)]
+		self.entity.direction = self.directions[math.random(#self.directions)]
 		self.entity:changeAnimation("walk-" .. tostring(self.entity.direction))
 
 	elseif self.timer > self.moveDuration and self.entity.walkSpeed < 200 then
@@ -81,7 +83,7 @@ function EntityWalkState:processAI(dt)
 		if math.random(3) == 1 then
 			self.entity.StateMachine:change("idle")
 		else
-			self.entity.direction = directions[math.random(#directions)]
+			self.entity.direction = self.directions[math.random(#self.directions)]
 			self.entity:changeAnimation("walk-" .. tostring(self.entity.direction))
 		end
 	end
@@ -128,8 +130,9 @@ function EntityWalkState:adjusment(direction, x, y)
 end
 
 function EntityWalkState:render()
-	
 	local animation = self.entity.currentAnimation
-	love.graphics.draw(gTextures[animation.texture], 
-		gFrames[animation.texture][animation:getCurrentFrame()], math.floor(self.entity.x), math.floor(self.entity.y))
+	if animation then
+		love.graphics.draw(gTextures[animation.texture], 
+			gFrames[animation.texture][animation:getCurrentFrame()], math.floor(self.entity.x), math.floor(self.entity.y))
+	end
 end

@@ -1,11 +1,11 @@
 PlayState = Class{__includes = BaseState}
 
 function PlayState:init()
-    self.room = Room()
+    self.room = Room(self)
 
     self.player = Player{
-        x = 1100,
-        y = 700,
+        x = 950,
+        y = 1124,
         width = 32,
         height = 48,
         texture = "character",
@@ -28,16 +28,27 @@ function PlayState:init()
     }
     self.player.StateMachine:change("idle")
 
+    self.canUpdate = true
     self.camX = 0
     self.camY = 0
 end
 
 function PlayState:update(dt)
+    if not self.canUpdate then
+        return
+    end
+
     self.player:update(dt)
     self.room:update(dt)
     self:updateCamera(dt)
+
     if wasPressed("b") then
         print(self.player.x, self.player.y)
+    end
+    if love.mouse.isDown(1) then
+        local x, y = push:toGame(love.mouse.getPosition())
+        print(x - self.camX, y - self.camY)
+        print(self.room.map:pointToTile(x - self.camX, y - self.camY)[2].gridX, self.room.map:pointToTile(x - self.camX, y - self.camY)[2].gridY)
     end
 end
 

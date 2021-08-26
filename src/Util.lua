@@ -32,17 +32,23 @@ function table.slice(tbl, slices)
 	return sliced
 end
 
-function drawAnimation(animation, x, y)
+function drawAnimation(animation, x, y, outfit)
+    if outfit == nil then
+        outfit = {
+            robe = "robe",
+            torso = "torso",
+            belt = "belt",
+            head = "head"
+        }
+    end
+    
     love.graphics.draw(gTextures[animation.texture]["character"], 
         gFrames[animation.texture]["character"][animation:getCurrentFrame()], x, y)
-    love.graphics.draw(gTextures[animation.texture]["robe"],
-        gFrames[animation.texture]["robe"][animation:getCurrentFrame()], x, y)
-    love.graphics.draw(gTextures[animation.texture]["torso"], 
-        gFrames[animation.texture]["torso"][animation:getCurrentFrame()], x, y)
-    love.graphics.draw(gTextures[animation.texture]["belt"],
-        gFrames[animation.texture]["belt"][animation:getCurrentFrame()], x, y)
-    love.graphics.draw(gTextures[animation.texture]["head"],
-        gFrames[animation.texture]["head"][animation:getCurrentFrame()], x, y)
+
+    for k, item in pairs(outfit) do
+        love.graphics.draw(gTextures[animation.texture][item],
+            gFrames[animation.texture][outfit.robe][animation:getCurrentFrame()], x, y)
+    end
 end
 
 function print_r ( t )

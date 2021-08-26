@@ -40,7 +40,7 @@ function SkeletonShootingRange:init(player)
             
                     skeleton.StateMachine = StateMachine{
                         ["idle"] = function() return EntityIdleState(skeleton) end,
-                        ["walk"] = function() return EntityWalkState(skeleton) end
+                        ["walk"] = function() return EntityWalkState(skeleton, {"left", "right"}) end
                     }
                     skeleton.StateMachine:change("idle")
             

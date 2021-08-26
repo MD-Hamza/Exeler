@@ -13,15 +13,13 @@ end
 
 function DisplayTextState:update(dt)
     if wasPressed("return") then
-        print(self.enterCounter)
-        if (self.enterCounter == 0) then
-            self.entity:changeState(self.nextState)
-        end
-
         Timer.tween(0.5, {
             [self] = {y = self.y - 75}
         })
         self.enterCounter = self.enterCounter - 1
+        if (self.enterCounter == 0) then
+            self.entity:changeState(self.nextState)
+        end
     end
 end
 
