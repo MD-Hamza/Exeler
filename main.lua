@@ -18,7 +18,7 @@ COLLIDABLE = {
     208, 445, 405, 446, 447, 407, 361, 362, 442, 443, 441, 
     367, 285, 324, 325, 323, 283, 41, 82, 81, 42, 44, 43, 83, 
     339, 379, 341, 299, 260, 810, 770, 730, 690, 691, 731, 771, 
-    811, 
+    811, 284, 296, 254, 298, 337
 }
 
 COLLIDABLE_TOP = {
@@ -72,41 +72,14 @@ function love.keypressed(key)
     if key == "escape" then
         love.event.quit()
     end
-    
-    --[[if key == "q" then
-        width = width + 1
-    elseif key == "w" then
-        width = width - 1
-    elseif key == "t" then
-        startX = startX + 1
-    elseif key == "y" then
-        startX = startX - 1
-    elseif key == "u" then
-        startY = startY + 1
-    elseif key == "i" then
-        startY = startY - 1
-    elseif key == "a" then
-        jumpX = jumpX + 1
-    elseif key == "s" then
-        jumpX = jumpX - 1
-    elseif key == "d" then
-        jumpY = jumpY + 1
-    elseif key == "f" then
-        jumpY = jumpY - 1
-    elseif key == "g" then
-        height = height + 1
-    elseif key == "h" then
-        height = height - 1
-    else
-        print(width, startX, jumpX, jumpY, startY, height)
-    end]]
-    
+
     love.keyboard.keysPressed[key] = true
+    table.insert(love.keyboard.keysPressed, key)
 end
 
 function love.draw()
     push:start()
-        gStateMachine:render()
+        gStateMachine:render()     
     push:finish()
 end
 
@@ -118,6 +91,10 @@ end
 
 function conf(t)
 	t.console = true
+end
+
+function love.textinput(t)
+    text = t
 end
 
 function quadVisualizer(width, height, atlas, startX, startY, jumpX, jumpY)
@@ -138,6 +115,18 @@ function quadVisualizer(width, height, atlas, startX, startY, jumpX, jumpY)
 	end
 end
 
+function keyPressed()
+    return #love.keyboard.keysPressed >= 1
+end
+
 function wasPressed(key)
     return love.keyboard.keysPressed[key]
+end
+
+function getText(prev)
+    if text then
+        return prev .. text
+    else
+        return prev
+    end
 end

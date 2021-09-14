@@ -30,6 +30,7 @@ function PlayerSwordState:update(dt)
     for k, entity in pairs(self.player.room.entities) do
         if entity:collides(self.hurtbox) then
             table.remove(self.player.room.entities, k)
+            break
         end
     end
 end

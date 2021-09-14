@@ -14,5 +14,29 @@ GAME_OBJECT_DEFS = {
 		width = 16,
 		height = 16,
 		solid = false
-	}
+	},
+	["blue"] = {
+		type = "Exeler Piece",
+		texture = "blue",
+		frame = 1,
+		width = 96,
+		height = 96,
+		solid = false
+	},
+	["yellow"] = {
+		type = "Exeler Piece",
+		texture = "yellow",
+		frame = 1,
+		width = 96,
+		height = 96,
+		solid = false
+	},
+	["purple"] = {
+		type = "Exeler Piece",
+		texture = "purple",
+		frame = 1,
+		width = 96,
+		height = 96,
+		solid = false
+	},
 }

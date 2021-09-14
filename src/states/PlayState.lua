@@ -4,8 +4,8 @@ function PlayState:init()
     self.room = Room(self)
 
     self.player = Player{
-        x = 950,
-        y = 1124,
+        x = 1000,
+        y = 1375,
         width = 32,
         height = 48,
         texture = "character",
@@ -25,12 +25,46 @@ function PlayState:init()
         ["bow"] = function() return PlayerBowState(self.player) end,
         ["text"] = function() return DisplayTextState(self.player) end,
         ["skeletonShooting"] = function() return SkeletonShootingRange(self.player) end,
+        ["over"] = function() return GameOverState(self.player) end,
     }
     self.player.StateMachine:change("idle")
+    self.player.StateMachine:change("text", {
+        text = "Explore the world of Exeler to find and combine the three pieces of Exeler scattered across the map. Use space to use your sword and press b to shoot your bow, to interact with anything use enter. Good luck on your quest.", 
+        enterCounter = 2,
+        nextState = "idle"
+    })
 
     self.canUpdate = true
+    self.canRender = true
     self.camX = 0
     self.camY = 0
+    self.opacity = 0
+
+    Event.on('fade', function()
+        Timer.tween(1, {
+            [self] = {opacity = 1}
+        }):finish(function()
+            Event.dispatch("spawnNPC")
+            Timer.tween(1, {
+                [self] = {opacity = 0}
+            })
+        end)
+    end)
+
+    Event.on('death', function()
+        Timer.tween(1, {
+            [self] = {opacity = 1}
+        }):finish(function()
+            self.player.x = 1064
+            self.player.y = 1060
+            self.player.health = 6
+            self.player:changeState("idle")
+            self.player.direction = "down"
+            Timer.tween(1, {
+                [self] = {opacity = 0}
+            })
+        end)
+    end)
 end
 
 function PlayState:update(dt)
@@ -42,6 +76,9 @@ function PlayState:update(dt)
     self.room:update(dt)
     self:updateCamera(dt)
 
+    if self.player.health <= 0 and self.opacity == 0 then
+        self.player.StateMachine:change("over")
+    end
     if wasPressed("b") then
         print(self.player.x, self.player.y)
     end
@@ -57,6 +94,7 @@ function PlayState:render()
     love.graphics.translate(math.floor(self.camX), math.floor(self.camY))
     self.room:render()
     self.player:render()
+    
     love.graphics.pop()
 
     local healthLeft = self.player.health
@@ -76,7 +114,8 @@ function PlayState:render()
         
         healthLeft = healthLeft - 2
     end
-    
+    love.graphics.setColor(1, 1, 1, self.opacity)
+    love.graphics.rectangle("fill", 0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT)
 end
 
 function PlayState:updateCamera(dt)

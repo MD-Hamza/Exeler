@@ -1,6 +1,6 @@
 ENTITY_DEFS = {
     ["player"] = {
-        walkSpeed = 140,
+        walkSpeed = 180,
         animations = {
             ["idle-up"] = {
                 frames = {1},
@@ -136,6 +136,12 @@ ENTITY_DEFS = {
                 frames = {49, 50, 51, 52},
                 interval = 0.08,
                 texture = "bow",
+                looping = false
+            },
+            ["hurt"] = {
+                frames = {1, 2, 3, 4, 5, 6},
+                interval = 0.15,
+                texture = "hurt",
                 looping = false
             }
         }

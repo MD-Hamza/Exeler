@@ -33,23 +33,23 @@ function EntityWalkState:update(dt)
 				local layerOneTile = self.entity.map.layerOne[y][x]
 				local layerTwoTile = self.entity.map.layerTwo[y][x]
 
-				if self.entity:collides(layerOneTile) and (layerOneTile:collidable() or layerTwoTile:collidable()) then
+				if layerOneTile:collides(self.entity) and (layerOneTile:collidable() or layerTwoTile:collidable()) then
 					if self.entity.direction == 'left' then
-						self.entity.x = layerOneTile.x + layerOneTile.width + 1
+						self.entity.x = layerOneTile.x + layerOneTile.width
 						if layerOneTile.collsionSide == "left" then
 							self.entity.x = self.entity.x - 16
 						end
 
 						self.bumped = true
 					elseif self.entity.direction == 'right' then
-						self.entity.x = layerOneTile.x - self.entity.width - 1
+						self.entity.x = layerOneTile.x - self.entity.width
 						if layerOneTile.collsionSide == "right" then
 							self.entity.x = self.entity.x + 16
 						end
 						
 						self.bumped = true
 					elseif self.entity.direction == 'up' then
-						self.entity.y = layerOneTile.y + layerOneTile.height - self.entity.height / 2 + 1
+						self.entity.y = layerOneTile.y + layerOneTile.height - self.entity.height / 2
 
 						if layerOneTile.collsionSide == "up" then
 							self.entity.y = self.entity.y - 16
@@ -63,7 +63,6 @@ function EntityWalkState:update(dt)
 						end
 						self.bumped = true
 					end
-
 					self:adjusment(self.entity.direction, x, y)
 				end
 				
@@ -73,6 +72,17 @@ function EntityWalkState:update(dt)
 end
 
 function EntityWalkState:processAI(dt)
+	if self.entity.walkSpeed > 200 then
+		if self.bumped then
+			self.entity.direction = self.entity.direction == "right" and "left" or "right"
+			self.entity.walkSpeed = 500
+			self.entity:changeAnimation("walk-" .. tostring(self.entity.direction))
+			self.bumped = false
+		end
+
+		return
+	end
+
 	if self.bumped or self.moveDuration == 0 then
 		self.moveDuration = math.random(5)
 		self.entity.direction = self.directions[math.random(#self.directions)]

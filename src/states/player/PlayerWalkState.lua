@@ -32,7 +32,7 @@ function PlayerWalkState:render()
     else
         self.player:changeState("idle")
     end
-    
+
     local animation = self.player.currentAnimation
     if animation then
         drawAnimation(animation, math.floor(self.player.x), math.floor(self.player.y))

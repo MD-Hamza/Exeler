@@ -25,6 +25,7 @@ function SkeletonShootingRange:init(player)
             self.timer = 60
             self.endX = self.player.x + 16
             self.endY = self.player.y - 125
+            self.player.room.entities = {}
             for y = 0, 2 do
                 for x = 0, 4 do
                     local skeleton = Entity{
@@ -52,14 +53,37 @@ function SkeletonShootingRange:init(player)
 end
 
 function SkeletonShootingRange:update(dt)
-    if self.timer then
-        self.timer = self.timer - dt
-    end
-
     if self.start then
+        self.timer = self.timer - dt
+
         if (#self.player.room.entities == 0) then
-            self.player.y = self.player.y - 35 + VIRTUAL_HEIGHT / 2
-            self.player:changeState("walk")
+            if not self.player.pieces["yellow"] then
+                table.insert(self.player.room.gameObjects, GameObject(GAME_OBJECT_DEFS["yellow"], 2290, 1850))
+                self.start = false
+                Timer.after(2, function()
+                    Timer.tween(1, {
+                        [self.player.room.gameObjects[#self.player.room.gameObjects]] = {y = self.player.y * 2 + VIRTUAL_HEIGHT / 2}
+                    }):finish(function()
+                        table.remove(self.player.room.gameObjects)
+                        self.player:changeAnimation("idle-up")
+                        self.player.y = self.player.y - 35 + VIRTUAL_HEIGHT / 2
+                        self.player:changeState("text", {
+                            text = "You received a piece of Exeler",
+                            enterCounter = 1,
+                            nextState = "idle"
+                        })
+                        self.player.pieces["yellow"] = true
+                    end)
+                end)
+            else
+                self.player:changeAnimation("idle-up")
+                self.player.y = self.player.y - 35 + VIRTUAL_HEIGHT / 2
+                self.player:changeState("text", {
+                    text = "Youve defeated all the skeletons",
+                    enterCounter = 1,
+                    nextState = "idle"
+                })
+            end
         end
         if wasPressed("space") and self.cooldown > 1 then
             local arrow = Arrow{
@@ -84,6 +108,17 @@ function SkeletonShootingRange:update(dt)
     self.endY = -135 * math.sin(self.angle) + self.player.y + 10
     self.endX = 135 * math.cos(self.angle) + self.player.x + 16
     self.player.invulnerable = true
+
+    if self.start and self.timer <= 0 then
+        self.player:changeAnimation("idle-up")
+        self.player.y = self.player.y - 35 + VIRTUAL_HEIGHT / 2
+        self.player.room.entities = {}
+        self.player:changeState("text", {
+            text = "Try again",
+            enterCounter = 1,
+            nextState = "idle"
+        })
+    end
 end
 
 function SkeletonShootingRange:render()
@@ -104,7 +139,7 @@ function SkeletonShootingRange:render()
         math.floor(self.player.y + self.player.offsetY))
 
     if self.timer then
-        love.graphics.setFont(gFonts["basic"])
+        love.graphics.setFont(gFonts["basic-small"])
         love.graphics.printf(tostring(math.floor(self.timer)), self.player.x - VIRTUAL_WIDTH / 2, 
             self.player.y - VIRTUAL_HEIGHT + 80, VIRTUAL_WIDTH, "right")
     end

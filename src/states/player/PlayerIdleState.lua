@@ -21,13 +21,8 @@ function PlayerIdleState:update(dt)
     if (wasPressed("return")) then
         self.player.y = self.player.y - 1
         for k, object in pairs(self.entity.room.gameObjects) do
-            if self.player:collides(object) then
-                self.player.x = object.x - 8
-                self.player:changeState("text", {
-                    text = "This is skeleton shooting range, defeat the skeletons within sixty seconds to recieve a piece of Exeler. These skeletons are trained to dodge arrows and you can shoot arrows every one second. Good Luck.", 
-                    enterCounter = 1,
-                    nextState = "skeletonShooting"
-                })
+            if self.player:collides(object) and object.type == "sign" then
+                object.onCollide()
             end
         end
         self.player.y = self.player.y + 1

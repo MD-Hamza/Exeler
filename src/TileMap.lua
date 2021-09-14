@@ -15,7 +15,7 @@ function TileMap:render()
 end
 
 function TileMap:pointToTile(x, y)
-	if (x < 0 or y < 0 or x > #mapLayerOne * 16 or y > #mapLayerOne[1] * 16) then
+	if (x < 0 or y < 0 or y > #mapLayerOne * 16 or x > #mapLayerOne[1] * 16) then
 		return nil
 	end
 
