@@ -8,8 +8,8 @@ Showcases my game development skills at this point
 ![Screenshot2](./screenshots/Screenshot-2.png)
 
 ## How to Play
-Move around with the arrow keys or `W` `A` `S` `D`
-Use `enter` to interact with signs and NPCs
+Move around with the arrow keys or `W` `A` `S` `D`\n
+Use `enter` to interact with signs and NPCs\n
 Press `space` to use sword and `b` to use the bow
 
 ## Credits
