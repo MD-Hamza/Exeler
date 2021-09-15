@@ -17,16 +17,16 @@ function PlayerWalkState:update(dt)
 end
 
 function PlayerWalkState:render()
-    if love.keyboard.isDown('left') then
+    if love.keyboard.isDown('left', 'a') then
         self.player.direction = 'left'
         self.player:changeAnimation('left')
-    elseif love.keyboard.isDown('right') then
+    elseif love.keyboard.isDown('right', 'd') then
         self.player.direction = 'right'
-        self.player:changeAnimation('right')
-    elseif love.keyboard.isDown('up') then
+        self.player:changeAnimation('right') 
+    elseif love.keyboard.isDown('up', 'w') then
         self.player.direction = 'up'
         self.player:changeAnimation('up')
-    elseif love.keyboard.isDown('down') then
+    elseif love.keyboard.isDown('down', 's') then
         self.player.direction = 'down'
         self.player:changeAnimation('down')
     else

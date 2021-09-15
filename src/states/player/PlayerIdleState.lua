@@ -5,8 +5,7 @@ function PlayerIdleState:enter()
 end
 
 function PlayerIdleState:update(dt)
-    if love.keyboard.isDown('left') or love.keyboard.isDown('right') or 
-        love.keyboard.isDown('up') or love.keyboard.isDown('down') then
+    if love.keyboard.isDown('left', 'down', 'right', 'left', 'w', 'a', 's', 'd') then
             self.player:changeState("walk")
     end
 
@@ -27,7 +26,6 @@ function PlayerIdleState:update(dt)
         end
         self.player.y = self.player.y + 1
     end
-    --self.player.hitBox = HitBox(self.player.x, self.player.y + self.player.height/2, self.player.width, self.player.height)
 end
 
 function PlayerIdleState:render()
