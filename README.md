@@ -8,7 +8,7 @@ Showcases my game development skills at this point
 ![Screenshot2](./screenshots/Screenshot-2.png)
 
 ## Demo
-https://serene-coast-24511.herokuapp.com/
+https://exeler.ml/
 
 ## How to Play
 - Move around with the arrow keys or `W` `A` `S` `D`
