@@ -8,7 +8,7 @@ Showcases my game development skills at this point
 ![Screenshot2](./screenshots/Screenshot-2.png)
 
 ## Demo
-https://exeler.ml/
+[https://exeler.netlify.app/]
 
 ## How to Play
 - Move around with the arrow keys or `W` `A` `S` `D`
